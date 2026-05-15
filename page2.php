@@ -23,8 +23,7 @@
     <h3>Результат работы функции get_headers:</h3>
     
     <?php
-        // Получаем заголовки сайта httpbin.org
-        $headers = get_headers('https://httpbin.org/post');
+        $headers = get_headers('https://httpbin.org/get');
         
         // Преобразуем массив в текст для вывода в textarea
         $headers_text = implode("\n", $headers);
