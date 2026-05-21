@@ -1,0 +1,205 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --black:   #111111;
+    --white:   #ffffff;
+    --grey:    #eeeeee;
+    --grey-2:  #dddddd;
+    --grey-3:  #aaaaaa;
+}
+
+body {
+    color: var(--black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    width: 96px;
+    height: auto;
+}
+
+.header-title {
+
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.header-spacer {
+    width: 96px;
+}
+
+/* Main */
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 16px;
+}
+
+/* Calculator card  */
+.calc-wrapper {
+    width: 100%;
+    max-width: 360px;
+    background: var(--white);
+    border: 1px solid var(--grey-2);
+}
+
+.calc-topbar {
+    padding: 10px 16px;
+    background: var(--black);
+}
+
+.calc-label {
+
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--grey-3);
+    letter-spacing: 0.18em;
+}
+
+/* Display  */
+.display-area {
+    padding: 14px 16px 10px;
+    background: var(--grey);
+    border-bottom: 1px solid var(--grey-2);
+    min-height: 84px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.display-expr {
+
+    font-size: 11px;
+    color: var(--grey-3);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.display {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--black);
+    text-align: right;
+    caret-color: var(--black);
+}
+
+.display::placeholder {
+    color: var(--grey-2);
+}
+
+.display--error {
+    color: #cc3333;
+}
+
+.error-msg {
+
+    font-size: 11px;
+    color: #cc3333;
+    text-align: right;
+}
+
+/*  Button grid  */
+.btn-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--grey-2);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 54px;
+    border: none;
+    cursor: pointer;
+
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--white);
+    color: var(--black);
+    transition: background 0.08s;
+    border-radius: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover  { background: var(--grey);   }
+.btn:active { background: var(--grey-2); }
+
+/* function buttons (√ ln log etc.) */
+.btn--fn {
+    background: var(--grey);
+    color: var(--black);
+    font-size: 13px;
+}
+.btn--fn:hover  { background: var(--grey-2); }
+
+/* operator buttons (÷ × − +) */
+.btn--op {
+    background: var(--black);
+    color: var(--white);
+    font-size: 18px;
+}
+.btn--op:hover  { background: #333; }
+.btn--op:active { background: #555; }
+
+/* C and backspace */
+.btn--action {
+    background: var(--grey);
+    color: var(--black);
+    font-size: 14px;
+}
+.btn--action:hover { background: var(--grey-2); }
+
+/* 0 spans 2 cols */
+.btn--wide {
+    grid-column: span 2;
+    background: var(--white);
+}
+.btn--wide:hover { background: var(--grey); }
+
+/* equals */
+.btn--eq {
+    background: var(--black);
+    color: var(--white);
+    font-size: 20px;
+}
+.btn--eq:hover  { background: #333; }
+.btn--eq:active { background: #555; }
+
+/*  Footer */
+.footer {
+    padding: 14px;
+    text-align: center;
+    background: var(--black);
+    color: var(--grey-3);
+
+    font-size: 11px;
+    letter-spacing: 0.06em;
+}
