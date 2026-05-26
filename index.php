@@ -1,78 +1,67 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Все лабораторные работы</title>
-    <style>
-        /* Немного стилей для красоты, это не обязательно */
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 20px auto; padding: 0 20px; }
-        .lab-list { list-style: none; padding: 0; }
-        .lab-list li { margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; }
-        .lab-link { display: block; padding: 15px; background: #f4f4f4; text-decoration: none; font-weight: bold; color: #333; cursor: pointer; }
-        .lab-link:hover { background: #e9e9e9; }
-        .lab-content { padding: 20px; display: none; border-top: 1px solid #ddd; }
-        iframe { width: 100%; min-height: 500px; border: none; }
-    </style>
-    <script>
-        function showLab(labId) {
-            // 1. Скрываем все блоки с содержимым лабораторных
-            const allContents = document.querySelectorAll('.lab-content');
-            allContents.forEach(content => content.style.display = 'none');
+<?php
 
-            // 2. Показываем только тот блок, на который нажали
-            const selectedContent = document.getElementById('content-' + labId);
-            if (selectedContent) {
-                selectedContent.style.display = 'block';
-            } else {
-                console.error('Блок с id content-' + labId + ' не найден');
-            }
-        }
-    </script>
-</head>
-<body>
+declare(strict_types=1); // Строгая типизация — PHP будет ругаться, если передать не тот тип
 
-    <h1>Мои лабораторные работы</h1>
+// Подключаем контроллер — он содержит всю логику страниц
+require __DIR__ . '/controllers/BlogController.php';
 
-    <ul class="lab-list">
-        <li>
-            <div class="lab-link" onclick="showLab('lab1')">📂 Лабораторная работа №1</div>
-            <div id="content-lab1" class="lab-content">
-                <iframe src="/lab1/index.php" title="Лабораторная работа 1"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №2</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №3</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №4</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №5</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №6</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-    </ul>
+// Базовый путь, на котором развёрнута лаба на сервере
+// Нужен, чтобы роутер правильно отрезал префикс и работал с чистыми путями
+$basePath = '/lab-07-routing';
 
-    <p style="margin-top: 30px; font-size: 0.9em; color: #555;">задание для самостоятельной работы</p>
+// Вспомогательная функция: проверяет, начинается ли строка с нужного префикса
+function routeStartsWith(string $text, string $prefix): bool
+{
+    return substr($text, 0, strlen($prefix)) === $prefix;
+}
 
-</body>
-</html>
+// Возвращает «чистый» путь запроса без basePath
+// Например: /lab-07-routing/about-me → /about-me
+function getRoutePath(string $basePath): string
+{
+    // Берём путь из URL (без query string и фрагментов)
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
+
+    // Если путь совпадает с basePath — это главная страница
+    if ($path === $basePath) {
+        return '/';
+    }
+
+    // Если путь начинается с basePath/ — отрезаем префикс
+    if (routeStartsWith($path, $basePath . '/')) {
+        $path = substr($path, strlen($basePath));
+    }
+
+    return $path === '' ? '/' : $path;
+}
+
+$path = getRoutePath($basePath);
+
+// Создаём контроллер — один объект на весь запрос
+$controller = new BlogController();
+
+// Роутинг: сравниваем путь и вызываем нужный метод контроллера
+
+// Главная страница — список статей
+if ($path === '/') {
+    $controller->index();
+    exit;
+}
+
+// Страница «Обо мне»
+if ($path === '/about-me') {
+    $controller->aboutMe();
+    exit;
+}
+
+// Страница прощания с динамическим именем в URL
+// Регулярка захватывает всё после /bye/ как имя (любые символы кроме /)
+// Флаг #u — поддержка UTF-8 (кириллица в URL)
+if (preg_match('#^/bye/([^/]+)$#u', $path, $matches)) {
+    $name = rawurldecode($matches[1]); // Декодируем URL-кодирование (%D0%98%D0%B2%D0%B0%D0%BD → Влад)
+    $controller->sayBye($name);
+    exit;
+}
+
+// Ни один маршрут не подошёл — отдаём 404
+$controller->notFound();
