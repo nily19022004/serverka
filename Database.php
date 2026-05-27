@@ -31,46 +31,46 @@ class Database
     
     private static function initDatabase()
     {
-        // Таблица пользователей
+        // Таблица пользователей (с московским временем)
         self::$connection->exec("
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nickname TEXT NOT NULL,
                 email TEXT NOT NULL,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                created_at TEXT DEFAULT (datetime('now', '+3 hours'))
             )
         ");
         
-        // Таблица статей
+        // Таблица статей (с московским временем)
         self::$connection->exec("
             CREATE TABLE IF NOT EXISTS articles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 author_id INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 text TEXT NOT NULL,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                created_at TEXT DEFAULT (datetime('now', '+3 hours'))
             )
         ");
         
         // Проверяем, есть ли данные
         $count = self::$connection->query("SELECT COUNT(*) FROM users")->fetchColumn();
         
-        // Если нет данных — добавляем демо-данные
+        // Если нет данных — добавляем демо-данные (с московским временем)
         if ($count == 0) {
             // Пользователи
             self::$connection->exec("
-                INSERT INTO users (nickname, email) VALUES
-                ('admin', 'admin@blog.com'),
-                ('Ниля', 'anna@blog.com'),
-                ('Катя', 'petr@blog.com')
+                INSERT INTO users (nickname, email, created_at) VALUES
+                ('admin', 'admin@blog.com', datetime('now', '+3 hours')),
+                ('Анна', 'anna@blog.com', datetime('now', '+3 hours')),
+                ('Петр', 'petr@blog.com', datetime('now', '+3 hours'))
             ");
             
             // Статьи
             self::$connection->exec("
-                INSERT INTO articles (author_id, name, text) VALUES
-                (1, 'Как я начала вести блог', 'Текст первой статьи. Здесь я рассказываю о своем опыте ведения блога. Это очень интересно и полезно для саморазвития.'),
-                (2, 'Мои путешествия', 'Текст второй статьи. Я люблю путешествовать и открывать новые места. В этой статье делюсь впечатлениями о поездках.'),
-                (3, 'Программирование для новичков', 'Текст третьей статьи. Программирование - это просто. Главное начать и не бояться ошибок.')
+                INSERT INTO articles (author_id, name, text, created_at) VALUES
+                (1, 'Как я начал вести блог', 'Текст первой статьи. Здесь я рассказываю о своем опыте ведения блога. Это очень интересно и полезно для саморазвития.', datetime('now', '+3 hours')),
+                (2, 'Мои путешествия', 'Текст второй статьи. Я люблю путешествовать и открывать новые места. В этой статье делюсь впечатлениями о поездках.', datetime('now', '+3 hours')),
+                (3, 'Программирование для новичков', 'Текст третьей статьи. Программирование - это просто. Главное начать и не бояться ошибок.', datetime('now', '+3 hours'))
             ");
         }
     }

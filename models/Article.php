@@ -48,4 +48,31 @@ class Article
         
         return new Article($row);
     }
+    
+    // Создание статьи с московским временем
+    public static function create($name, $text, $authorId)
+    {
+        $db = Database::getConnection();
+        
+        // Московское время (UTC+3)
+        $stmt = $db->prepare("
+            INSERT INTO articles (author_id, name, text, created_at) 
+            VALUES (:author_id, :name, :text, datetime('now', '+3 hours'))
+        ");
+        
+        return $stmt->execute([
+            'author_id' => $authorId,
+            'name' => $name,
+            'text' => $text
+        ]);
+    }
+    
+    // ========= НОВЫЙ МЕТОД: УДАЛЕНИЕ СТАТЬИ =========
+    public static function delete($id)
+    {
+        $db = Database::getConnection();
+        
+        $stmt = $db->prepare("DELETE FROM articles WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
 }

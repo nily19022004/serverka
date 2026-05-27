@@ -32,4 +32,18 @@ class User
         
         return new User($row);
     }
+    
+    // ========= НОВЫЙ МЕТОД: ПОЛУЧИТЬ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ =========
+    public static function findAll()
+    {
+        $db = Database::getConnection();
+        $result = $db->query("SELECT * FROM users ORDER BY id");
+        
+        $users = [];
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = new User($row);
+        }
+        
+        return $users;
+    }
 }
