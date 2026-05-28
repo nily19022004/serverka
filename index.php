@@ -1,78 +1,76 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Все лабораторные работы</title>
-    <style>
-        /* Немного стилей для красоты, это не обязательно */
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 20px auto; padding: 0 20px; }
-        .lab-list { list-style: none; padding: 0; }
-        .lab-list li { margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; }
-        .lab-link { display: block; padding: 15px; background: #f4f4f4; text-decoration: none; font-weight: bold; color: #333; cursor: pointer; }
-        .lab-link:hover { background: #e9e9e9; }
-        .lab-content { padding: 20px; display: none; border-top: 1px solid #ddd; }
-        iframe { width: 100%; min-height: 500px; border: none; }
-    </style>
-    <script>
-        function showLab(labId) {
-            // 1. Скрываем все блоки с содержимым лабораторных
-            const allContents = document.querySelectorAll('.lab-content');
-            allContents.forEach(content => content.style.display = 'none');
+<?php
 
-            // 2. Показываем только тот блок, на который нажали
-            const selectedContent = document.getElementById('content-' + labId);
-            if (selectedContent) {
-                selectedContent.style.display = 'block';
-            } else {
-                console.error('Блок с id content-' + labId + ' не найден');
-            }
+declare(strict_types=1);
+
+// Автозагрузчик классов — ищет файл по имени класса в трёх папках
+spl_autoload_register(function (string $className): void {
+    $paths = [
+        __DIR__ . '/src/Controllers/' . $className . '.php',
+        __DIR__ . '/src/Database/' . $className . '.php',
+        __DIR__ . '/src/Models/' . $className . '.php',
+    ];
+
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            require $path;
+            return;
         }
-    </script>
-</head>
-<body>
+    }
+});
 
-    <h1>Мои лабораторные работы</h1>
+$basePath = '/lab-10';
 
-    <ul class="lab-list">
-        <li>
-            <div class="lab-link" onclick="showLab('lab1')">📂 Лабораторная работа №1</div>
-            <div id="content-lab1" class="lab-content">
-                <iframe src="/lab1/index.php" title="Лабораторная работа 1"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №2</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №3</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №4</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №5</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-        <li>
-            <div class="lab-link" onclick="showLab('lab2')">📂 Лабораторная работа №6</div>
-            <div id="content-lab2" class="lab-content">
-                <iframe src="/lab2/index.php" title="Лабораторная работа 2"></iframe>
-            </div>
-        </li>
-    </ul>
+function routeStartsWith(string $text, string $prefix): bool
+{
+    return substr($text, 0, strlen($prefix)) === $prefix;
+}
 
-    <p style="margin-top: 30px; font-size: 0.9em; color: #555;">задание для самостоятельной работы</p>
+function getRoutePath(string $basePath): string
+{
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 
-</body>
-</html>
+    if ($path === $basePath) {
+        return '/';
+    }
+
+    if (routeStartsWith($path, $basePath . '/')) {
+        $path = substr($path, strlen($basePath));
+    }
+
+    return $path === '' ? '/' : $path;
+}
+
+$path = getRoutePath($basePath);
+
+$controller = new ArticlesController();
+
+// Главная и /articles — список всех статей
+if ($path === '/' || $path === '/articles') {
+    $controller->index();
+    exit;
+}
+
+// /articles/create — форма создания новой статьи (GET) и сохранение (POST)
+// Маршрут стоит ДО /articles/{id}/edit и /articles/{id}, чтобы "create"
+// не попало под числовой паттерн
+if ($path === '/articles/create') {
+    $controller->create();
+    exit;
+}
+
+// /articles/{id}/edit — форма редактирования (GET) и сохранение (POST)
+// Маршрут стоит ДО /articles/{id}, чтобы "edit" не попало под числовой паттерн
+if (preg_match('~^/articles/(\d+)/edit$~', $path, $matches)) {
+    $articleId = (int) $matches[1];
+    $controller->edit($articleId);
+    exit;
+}
+
+// /articles/{id} — страница конкретной статьи
+if (preg_match('#^/articles/(\d+)$#', $path, $matches)) {
+    $articleId = (int) $matches[1];
+    $controller->show($articleId);
+    exit;
+}
+
+$controller->notFound();
