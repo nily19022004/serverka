@@ -13,6 +13,7 @@ class User
     public string $authToken;
     public string $createdAt;
 
+    // Конструктор - создаёт объект пользователя из строки БД
     public function __construct(array $row)
     {
         $this->id           = (int) $row['id'];
@@ -25,6 +26,7 @@ class User
         $this->createdAt    = $row['created_at'];
     }
 
+    // Найти пользователя по ID
     public static function findById(int $id): ?self
     {
         $db = Database::getConnection();

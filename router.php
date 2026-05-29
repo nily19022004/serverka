@@ -2,10 +2,12 @@
 
 $basePath = '/lab9';
 
+// Проверяет, начинается ли строка с префикса
 function startsWith(string $text, string $prefix): bool {
     return substr($text, 0, strlen($prefix)) === $prefix;
 }
 
+// Нормализует путь, отрезая базовый путь
 function normalizePath(string $path, string $basePath): string {
     if ($path === $basePath) {
         return '/';
@@ -16,6 +18,7 @@ function normalizePath(string $path, string $basePath): string {
     return $path === '' ? '/' : $path;
 }
 
+// Отдаёт статические файлы (CSS, JS, изображения) напрямую
 function serveStaticFile(string $path, string $basePath): void {
     $path = normalizePath($path, $basePath);
     $projectRoot = realpath(__DIR__ . '/..');
@@ -28,11 +31,13 @@ function serveStaticFile(string $path, string $basePath): void {
         if ($file === false || !is_file($file)) {
             continue;
         }
+        // Безопасность: файл должен быть в пределах проекта
         $isLabFile = $labRoot !== false && startsWith($file, $labRoot);
         $isProjectFile = $projectRoot !== false && startsWith($file, $projectRoot);
         if (!$isLabFile && !$isProjectFile) {
             continue;
         }
+        // Определяем MIME-тип по расширению
         $extension = pathinfo($file, PATHINFO_EXTENSION);
         $contentTypes = [
             'css' => 'text/css',
@@ -50,6 +55,8 @@ function serveStaticFile(string $path, string $basePath): void {
     }
 }
 
+// Получаем запрошенный путь и пытаемся отдать статику
 $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
 serveStaticFile($requestPath, $basePath);
+// Если не статика - передаём управление index.php
 require __DIR__ . '/index.php';

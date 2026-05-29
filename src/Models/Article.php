@@ -7,6 +7,7 @@ class Article {
     public string $text;
     public string $createdAt;
 
+    // Конструктор - создаёт объект статьи из строки БД
     public function __construct(array $row) {
         $this->id = (int) $row['id'];
         $this->authorId = (int) $row['author_id'];
@@ -15,12 +16,14 @@ class Article {
         $this->createdAt = $this->convertToMoscowTime($row['created_at']);
     }
 
+    // Конвертация времени из UTC в московское
     private function convertToMoscowTime(string $utcTime): string {
         $datetime = new DateTime($utcTime, new DateTimeZone('UTC'));
         $datetime->setTimezone(new DateTimeZone('Europe/Moscow'));
         return $datetime->format('Y-m-d H:i:s');
     }
 
+    // Получить все статьи (сортировка от новых к старым)
     public static function findAll(): array {
         $db = Database::getConnection();
         $statement = $db->query('SELECT * FROM articles ORDER BY id DESC');
@@ -31,6 +34,7 @@ class Article {
         return $articles;
     }
 
+    // Найти статью по ID
     public static function findById(int $id): ?self {
         $db = Database::getConnection();
         $statement = $db->prepare('SELECT * FROM articles WHERE id = :id');
@@ -42,6 +46,7 @@ class Article {
         return new self($row);
     }
 
+    // Создать новую статью
     public static function insert(int $authorId, string $name, string $text): self {
         $db = Database::getConnection();
         $statement = $db->prepare(
