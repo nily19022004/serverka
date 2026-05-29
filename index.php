@@ -18,13 +18,16 @@ spl_autoload_register(function (string $className): void {
     }
 });
 
+// Базовый путь для маршрутизации
 $basePath = '/lab-10';
 
+// Проверяет, начинается ли строка с префикса
 function routeStartsWith(string $text, string $prefix): bool
 {
     return substr($text, 0, strlen($prefix)) === $prefix;
 }
 
+// Получает путь из URI, отрезая базовый путь
 function getRoutePath(string $basePath): string
 {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
@@ -40,6 +43,7 @@ function getRoutePath(string $basePath): string
     return $path === '' ? '/' : $path;
 }
 
+// Определяем текущий маршрут
 $path = getRoutePath($basePath);
 
 $controller = new ArticlesController();
@@ -73,4 +77,5 @@ if (preg_match('#^/articles/(\d+)$#', $path, $matches)) {
     exit;
 }
 
+// Если ничего не подошло - страница 404
 $controller->notFound();

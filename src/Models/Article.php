@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 class Article
 {
+    // Свойства, соответствующие полям таблицы articles
     public int $id;
     public int $authorId;
     public string $name;
     public string $text;
     public string $createdAt;
 
+    // Конструктор - создаёт объект статьи из массива данных БД
     public function __construct(array $row)
     {
         $this->id        = (int) $row['id'];
@@ -19,6 +21,7 @@ class Article
         $this->createdAt = $row['created_at'];
     }
 
+    // Получить все статьи (сортировка от новых к старым)
     public static function findAll(): array
     {
         $db = Database::getConnection();
@@ -34,6 +37,7 @@ class Article
         return $articles;
     }
 
+    // Найти статью по ID, вернуть null если не найдена
     public static function findById(int $id): ?self
     {
         $db = Database::getConnection();
@@ -50,6 +54,7 @@ class Article
         return new self($row);
     }
 
+    // Создать новую статью (дата +3 часа для московского времени)
     public static function insert(int $authorId, string $name, string $text): self
 {
     $db = Database::getConnection();
@@ -65,6 +70,7 @@ class Article
     return self::findById($id);
 }
 
+    // Сохранить изменения текущей статьи в БД
     public function save(): void
     {
         $db = Database::getConnection();

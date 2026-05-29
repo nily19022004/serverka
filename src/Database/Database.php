@@ -6,20 +6,26 @@ class Database
 {
     private static ?PDO $connection = null;
 
+    // Получение соединения с БД (паттерн Singleton)
     public static function getConnection(): PDO
     {
         if (self::$connection === null) {
+            // Путь к папке с данными (на уровень выше)
             $dataDir = dirname(__DIR__, 2) . '/data';
 
+            // Создаём папку, если её нет
             if (!is_dir($dataDir)) {
                 mkdir($dataDir, 0777, true);
             }
 
+            // Путь к файлу SQLite базы данных
             $dbPath = $dataDir . '/blog.sqlite';
 
+            // Создаём соединение
             self::$connection = new PDO('sqlite:' . $dbPath);
             self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            // Создаём таблицы и добавляем демо-данные
             self::createTables();
             self::insertDemoData();
         }
@@ -27,10 +33,12 @@ class Database
         return self::$connection;
     }
 
+    // Создание таблиц, если они не существуют
     private static function createTables(): void
     {
         $db = self::$connection;
 
+        // Таблица пользователей
         $db->exec("
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,6 +52,7 @@ class Database
             )
         ");
 
+        // Таблица статей
         $db->exec("
             CREATE TABLE IF NOT EXISTS articles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,10 +64,12 @@ class Database
         ");
     }
 
+    // Добавление демонстрационных данных, если таблицы пусты
     private static function insertDemoData(): void
     {
         $db = self::$connection;
 
+        // Проверяем, есть ли пользователи
         $usersCount = (int) $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
 
         if ($usersCount === 0) {
@@ -71,6 +82,7 @@ class Database
             ");
         }
 
+        // Проверяем, есть ли статьи
         $articlesCount = (int) $db->query("SELECT COUNT(*) FROM articles")->fetchColumn();
 
         if ($articlesCount === 0) {

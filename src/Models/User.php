@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 class User
 {
+    // Свойства, соответствующие полям таблицы users
     public int $id;
     public string $nickname;
     public string $email;
@@ -13,6 +14,7 @@ class User
     public string $authToken;
     public string $createdAt;
 
+    // Конструктор - создаёт объект пользователя из массива данных БД
     public function __construct(array $row)
     {
         $this->id           = (int) $row['id'];
@@ -25,6 +27,7 @@ class User
         $this->createdAt    = $row['created_at'];
     }
 
+    // Найти пользователя по ID, вернуть null если не найден
     public static function findById(int $id): ?self
     {
         $db = Database::getConnection();

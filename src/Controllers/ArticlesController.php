@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 class ArticlesController
 {
+    // Главная страница - список всех статей
     public function index(): void
     {
         $articles = Article::findAll();
@@ -13,6 +14,7 @@ class ArticlesController
         ]);
     }
 
+    // Просмотр одной статьи по ID
     public function show(int $id): void
     {
         $article = Article::findById($id);
@@ -22,7 +24,7 @@ class ArticlesController
             return;
         }
 
-        // Получаем автора статьи из таблицы users (ORM — связь через author_id)
+        // Получаем автора статьи из таблицы users (связь через author_id)
         $author = User::findById($article->authorId);
 
         $this->render('articles/show.php', [
@@ -31,6 +33,7 @@ class ArticlesController
         ], $article->name);
     }
 
+    // Создание новой статьи
     public function create(): void
     {
         // POST — сохраняем новую статью и редиректим на неё
@@ -62,6 +65,7 @@ class ArticlesController
         ], 'Новая статья');
     }
 
+    // Редактирование статьи
     public function edit(int $id): void
     {
         $article = Article::findById($id);
@@ -92,6 +96,7 @@ class ArticlesController
         ], 'Редактирование: ' . $article->name);
     }
 
+    // Страница 404 - статья не найдена
     public function notFound(): void
     {
         http_response_code(404);
@@ -102,14 +107,18 @@ class ArticlesController
         ], '404');
     }
 
+    // Вспомогательный метод для рендеринга представлений
     private function render(string $view, array $params = [], ?string $title = null): void
     {
+        // Превращает ключи массива в переменные
         extract($params);
 
+        // Начинаем буферизацию вывода
         ob_start();
         require __DIR__ . '/../../views/' . $view;
         $content = ob_get_clean();
 
+        // Подключаем основной шаблон
         require __DIR__ . '/../../main.php';
     }
 }
