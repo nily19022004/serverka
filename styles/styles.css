@@ -1,0 +1,586 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* ===== LAYOUT ===== */
+.layout {
+    width: 100%;
+    max-width: 1024px;
+    margin: 25px auto;
+    background: #fff;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+}
+
+.layout tr td {
+    padding: 20px;
+    vertical-align: top;
+    border: 1px solid #ddd;
+}
+
+/* ===== HEADER ===== */
+.header {
+    background: #2c3e50;
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 24px;
+}
+
+.header-logo {
+    color: #fff;
+    text-decoration: none;
+}
+
+.header-logo:hover {
+    color: #f39c12;
+}
+
+.header-sub {
+    font-size: 12px;
+    color: #aab;
+    margin-top: 6px;
+    letter-spacing: 1px;
+    font-weight: normal;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f39c12;
+    color: #2c3e50;
+}
+
+.main-content h3 {
+    font-size: 17px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.main-content h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.main-content p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.main-content a {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+.main-content a:hover {
+    text-decoration: underline;
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 6px 14px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #2c3e50;
+    color: #fff;
+    border-color: #2c3e50;
+    text-decoration: none;
+}
+
+/* ===== STARS ===== */
+.stars {
+    color: #f39c12;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.stars-lg {
+    font-size: 22px;
+}
+
+/* ===== RECIPE CARD ===== */
+.recipe-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 14px;
+    background: #fff;
+    transition: box-shadow 0.2s;
+}
+
+.recipe-card:hover {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.recipe-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.recipe-card-top h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.recipe-card-top h3 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.recipe-card-top h3 a:hover {
+    color: #f39c12;
+    text-decoration: none;
+}
+
+.recipe-desc {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.recipe-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #888;
+    flex-wrap: wrap;
+}
+
+/* ===== RECIPE PAGE ===== */
+.recipe-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #f39c12;
+    padding-bottom: 10px;
+}
+
+.recipe-page-header h2 {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-page-desc {
+    font-size: 15px;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+.recipe-sections {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.recipe-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.recipe-section h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+}
+
+.ingredients-list li {
+    font-size: 14px;
+    padding: 5px 0;
+    border-bottom: 1px solid #f5f5f5;
+    color: #444;
+}
+
+.ingredients-list li::before {
+    content: '• ';
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.steps-list {
+    padding-left: 20px;
+}
+
+.steps-list li {
+    font-size: 14px;
+    padding: 6px 0;
+    line-height: 1.6;
+    color: #444;
+}
+
+.recipe-actions {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+/* ===== COMMENTS ===== */
+.comments-section {
+    margin-top: 30px;
+    border-top: 2px solid #f39c12;
+    padding-top: 20px;
+}
+
+.comments-section h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #2c3e50;
+}
+
+.comment-card {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comment-author {
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.comment-text {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.comment-form-wrap {
+    margin-top: 24px;
+    background: #f5f9ff;
+    border: 1px solid #d0e4f7;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.comment-form-wrap h4 {
+    margin-bottom: 14px;
+    color: #2c3e50;
+}
+
+.comment-form .form-group {
+    margin-bottom: 14px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 200px;
+    background: #f7f7f7;
+    border-left: 1px solid #ddd;
+}
+
+.sidebarHeader {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin-bottom: 8px;
+}
+
+.sidebar ul li {
+    margin-bottom: 4px;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 7px 10px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.sidebar ul li a:hover {
+    background: #2c3e50;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: #2c3e50;
+    color: #aab;
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-create {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #27ae60;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-create:hover {
+    background: #1e8449;
+    text-decoration: none;
+    color: #fff;
+}
+
+.btn-save {
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background: #1e8449;
+}
+
+.btn-submit {
+    background: #2980b9;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background: #1a6fa3;
+}
+
+.btn-cancel {
+    display: inline-block;
+    margin-left: 12px;
+    color: #888;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    color: #333;
+}
+
+/* ===== FORMS ===== */
+.edit-form {
+    max-width: 700px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.form-group label small {
+    font-weight: normal;
+    color: #888;
+    font-size: 12px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    transition: border-color 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 4px rgba(41,128,185,0.2);
+}
+
+.form-group textarea {
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-actions {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* ===== STAR PICKER ===== */
+.star-picker {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.star-btn {
+    font-size: 28px;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.15s;
+    user-select: none;
+    line-height: 1;
+}
+
+.star-btn.active,
+.star-btn.hover {
+    color: #f39c12;
+}
+
+/* ===== MISC ===== */
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.list-header h2 {
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+.date {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.empty-msg {
+    color: #888;
+    font-style: italic;
+    padding: 20px 0;
+}
+
+.form-error {
+    background: #fdecea;
+    color: #c0392b;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+/* ===== DELETE BUTTONS ===== */
+.inline-form {
+    display: inline;
+}
+
+.btn-delete {
+    display: inline-block;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #922b21;
+}
+
+.btn-delete-comment {
+    background: none;
+    border: none;
+    color: #c0392b;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.btn-delete-comment:hover {
+    color: #922b21;
+}
+
+.comment-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
