@@ -1,67 +1,97 @@
 <?php
+// D:\Desktop\study\2 семестр\serv\src\Database\Database.php
 
 declare(strict_types=1);
 
+/**
+ * Класс для работы с базой данных SQLite
+ * Реализует паттерн Singleton (одиночка) — всегда одно подключение
+ */
 class Database
 {
+    /** @var PDO|null Единственный экземпляр подключения к БД */
     private static ?PDO $connection = null;
 
+    /**
+     * Получает соединение с базой данных (создаёт при первом вызове)
+     * @return PDO Объект PDO для работы с SQLite
+     */
     public static function getConnection(): PDO
     {
+        // Если соединение ещё не установлено
         if (self::$connection === null) {
+            // Определяем путь до папки data (на два уровня выше)
             $dataDir = dirname(__DIR__, 2) . '/data';
 
+            // Создаём папку data, если её нет (права 0777 — полный доступ)
             if (!is_dir($dataDir)) {
                 mkdir($dataDir, 0777, true);
             }
 
+            // Полный путь к файлу базы данных SQLite
             $dbPath = $dataDir . '/recipes.sqlite';
 
+            // Создаём новое PDO-подключение к SQLite
             self::$connection = new PDO('sqlite:' . $dbPath);
+            // Включаем режим ошибок: исключения при любых проблемах с БД
             self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+            // Создаём таблицы, если их ещё нет
             self::createTables();
+            // Заполняем демо-данными, если таблица рецептов пуста
             self::insertDemoData();
         }
 
         return self::$connection;
     }
 
+    /**
+     * Создаёт таблицы recipes и comments, если они не существуют
+     */
     private static function createTables(): void
     {
         $db = self::$connection;
 
+        // Таблица рецептов
         $db->exec("
             CREATE TABLE IF NOT EXISTS recipes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(255) NOT NULL,
-                description TEXT NOT NULL,
-                ingredients TEXT NOT NULL,
-                steps TEXT NOT NULL,
-                difficulty INTEGER NOT NULL DEFAULT 1,
-                cook_time VARCHAR(64) NOT NULL DEFAULT '',
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                id INTEGER PRIMARY KEY AUTOINCREMENT,      -- Уникальный ID рецепта
+                name VARCHAR(255) NOT NULL,                -- Название рецепта
+                description TEXT NOT NULL,                 -- Краткое описание
+                ingredients TEXT NOT NULL,                 -- Список ингредиентов
+                steps TEXT NOT NULL,                       -- Шаги приготовления
+                difficulty INTEGER NOT NULL DEFAULT 1,     -- Сложность: 1,2,3
+                cook_time VARCHAR(64) NOT NULL DEFAULT '', -- Время приготовления (текст)
+                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP -- Дата создания (UTC)
             )
         ");
 
+        // Таблица комментариев
         $db->exec("
             CREATE TABLE IF NOT EXISTS comments (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                recipe_id INTEGER NOT NULL,
-                author VARCHAR(128) NOT NULL,
-                text TEXT NOT NULL,
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                id INTEGER PRIMARY KEY AUTOINCREMENT,      -- Уникальный ID комментария
+                recipe_id INTEGER NOT NULL,                -- ID рецепта, к которому относится
+                author VARCHAR(128) NOT NULL,              -- Имя автора комментария
+                text TEXT NOT NULL,                        -- Текст комментария
+                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP -- Дата создания (UTC)
             )
         ");
     }
 
+    /**
+     * Заполняет базу данных демонстрационными рецептами и комментариями
+     * Запускается только если таблица recipes пуста
+     */
     private static function insertDemoData(): void
     {
         $db = self::$connection;
 
+        // Считаем количество записей в таблице recipes
         $count = (int) $db->query("SELECT COUNT(*) FROM recipes")->fetchColumn();
 
+        // Если рецептов ещё нет — добавляем демо-данные
         if ($count === 0) {
+            // Добавляем 4 демо-рецепта
             $db->exec("
                 INSERT INTO recipes (name, description, ingredients, steps, difficulty, cook_time, created_at) VALUES
                 (
@@ -142,6 +172,7 @@ class Database
                 )
             ");
 
+            // Добавляем 3 демо-комментария (два к борщу, один к карбонаре)
             $db->exec("
                 INSERT INTO comments (recipe_id, author, text, created_at) VALUES
                 (1, 'Мария', 'Отличный рецепт! Делала вчера, семья в восторге. Добавила немного сахара в свёклу.', CURRENT_TIMESTAMP),

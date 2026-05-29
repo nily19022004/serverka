@@ -1,6 +1,13 @@
+<?php
+// D:\Desktop\study\2 семестр\serv\views\recipes\edit.php
+// Представление: форма для редактирования существующего рецепта
+// Принцип аналогичен create.php, но поля предзаполнены данными из $recipe
+?>
+
 <article class="recipe-page">
     <h2>Редактирование рецепта</h2>
 
+    <!-- Форма отправляется на /recipes/{id}/edit -->
     <form method="post" action="/recipes/<?= $recipe->id ?>/edit" class="edit-form">
 
         <div class="form-group">
@@ -20,6 +27,7 @@
                 <label>Сложность *</label>
                 <div class="star-picker" id="starPicker">
                     <?php for ($i = 1; $i <= 3; $i++): ?>
+                        <!-- active — если текущая сложность рецепта >= номеру звезды -->
                         <span class="star-btn <?= $recipe->difficulty >= $i ? 'active' : '' ?>"
                               data-val="<?= $i ?>">★</span>
                     <?php endfor; ?>
@@ -52,6 +60,7 @@
     </form>
 </article>
 
+<!-- JavaScript для выбора сложности (аналогичен create.php) -->
 <script>
 (function () {
     var stars  = document.querySelectorAll('.star-btn');
