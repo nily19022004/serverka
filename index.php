@@ -1,5 +1,11 @@
 <?php
 
+// ВРЕМЕННАЯ ПРОВЕРКА (удалить потом)
+$testExpression = trim(file_get_contents(__DIR__ . '/Task/expression.txt'));
+echo "<!-- Тест: выражение из файла = $testExpression -->\n";
+echo "<!-- Результат: " . (4/3 * cos(deg2rad(30))) . " -->\n";
+
+require_once __DIR__ . '/trigonometric.php';
 // ==================== БАЗОВЫЕ МАТЕМАТИЧЕСКИЕ ФУНКЦИИ ====================
 
 /**
